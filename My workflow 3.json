@@ -1,0 +1,579 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        -112
+      ],
+      "id": "eaa39b37-2798-4225-a982-55f10d80fb6e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1zKUO4cciX_hS_2S9LVW4dfeESBqL0L9OFBGSnnmyCeI",
+          "mode": "list",
+          "cachedResultName": "discount",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zKUO4cciX_hS_2S9LVW4dfeESBqL0L9OFBGSnnmyCeI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Discounted",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zKUO4cciX_hS_2S9LVW4dfeESBqL0L9OFBGSnnmyCeI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        64,
+        -16
+      ],
+      "id": "8418ef30-c6e1-459c-888c-1fc3b0ec632f",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uKz0EpVyPv3pxlfr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        80
+      ],
+      "id": "c977b63a-ec98-4c46-812e-f28b01ef6438",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "af363ef7-91ec-4f46-8108-80d9dcc23f76",
+              "leftValue": "={{ $json.Status }}\n",
+              "rightValue": "ACTIVE",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "5acd9d5a-4268-48a5-8da2-45b3b44b9abe",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "7ea743da-04e4-4cf9-be1b-910478250974",
+              "leftValue": "={{ $json.Opted_In }}",
+              "rightValue": "YES",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        288,
+        -16
+      ],
+      "id": "db63a242-56a4-4f78-9094-d0179b037754",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "27834bc9-1d57-4854-8f08-2c00f5061b09",
+              "name": "userEmail",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "2052a769-e93e-43e1-871f-de96682afbe8",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "ddc56970-e0db-4a89-bb52-a702975f161a",
+              "name": "couponType",
+              "value": "PERSONALIZED",
+              "type": "string"
+            },
+            {
+              "id": "5fe004c9-401f-463d-a634-888931cfa733",
+              "name": "discountPercent",
+              "value": 0,
+              "type": "number"
+            },
+            {
+              "id": "0551cfa3-7bbb-45a7-8966-7256e9613d5c",
+              "name": "DiscountPercent",
+              "value": "={{ $json.DiscountPercent || 20 }}\n",
+              "type": "number"
+            },
+            {
+              "id": "5737f031-d457-4850-b45a-2107181c11e5",
+              "name": "validityHours",
+              "value": 0.0167,
+              "type": "number"
+            },
+            {
+              "id": "05022e99-c322-42b9-978e-3c194a62c906",
+              "name": "reminderHours",
+              "value": 0.008,
+              "type": "number"
+            },
+            {
+              "id": "9217012b-babe-4b1b-8680-77b2fd023dcb",
+              "name": "notificationEmail",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "b0e309d7-3ccb-43de-88e4-edde6ca9dea4",
+              "name": "storeUrl",
+              "value": "https://www.pattern.com/home-alt",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        512,
+        -16
+      ],
+      "id": "d85040cf-d529-4ea9-ba10-861f5ea6941c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const saleConfig = $input.item.json;\nconst userName = saleConfig.userName || 'Customer';\nconst userEmail = saleConfig.userEmail || '';\nconst timestamp = Date.now();\n\nfunction randomString(length) {\n  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';\n  let result = '';\n  for (let i = 0; i < length; i++) {\n    result += chars.charAt(Math.floor(Math.random() * chars.length));\n  }\n  return result;\n}\n\nfunction getInitials(name) {\n  return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 3);\n}\n\nfunction getEmailPrefix(email) {\n  return email.split('@')[0].toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);\n}\n\nconst patterns = [\n  () => `SAVE${getInitials(userName)}${Math.floor(timestamp % 10000)}`,\n  () => `${getEmailPrefix(userEmail)}OFF${saleConfig.discountPercent}`,\n  () => `VIP${randomString(4)}${saleConfig.discountPercent}`,\n  () => `FLASH${randomString(5)}`,\n  () => `${userName.substring(0, 4).toUpperCase()}${timestamp.toString().slice(-5)}`,\n  () => `DEAL${saleConfig.discountPercent}${randomString(4)}`\n];\n\nconst couponCode = patterns[Math.floor(Math.random() * patterns.length)]();\n\nconst now = new Date();\nconst expiresAt = new Date(now.getTime() + (saleConfig.validityHours || 24) * 60 * 60 * 1000);\nconst reminderAt = new Date(expiresAt.getTime() - (saleConfig.reminderHours || 2) * 60 * 60 * 1000);\n\nreturn {\n  json: {\n    ...saleConfig,\n    couponCode,\n    generatedAt: now.toISOString(),\n    expiresAtISO: expiresAt.toISOString(),\n    reminderAtISO: reminderAt.toISOString(),\n    waitUntilReminderMs: reminderAt.getTime() - now.getTime(),\n    waitUntilExpiryMs: expiresAt.getTime() - now.getTime()\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        736,
+        -16
+      ],
+      "id": "12f9ca5f-de19-4e76-b394-2a19edda32f3",
+      "name": "Generate Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9da7a21e-72f9-4970-b4aa-9419e8bc61ca",
+              "name": "couponCode",
+              "value": "={{ $json.couponCode }}",
+              "type": "string"
+            },
+            {
+              "id": "1ea0bc0e-95bf-49b6-b6ef-7f3f962f4996",
+              "name": "userEmail",
+              "value": "={{ $json.userEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "68c3502c-c00e-49b7-8260-dcb6621ba12b",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "696b4f79-58fe-4ffa-b518-e114d6a0e3e8",
+              "name": "discountPercent",
+              "value": "={{ $json.discountPercent }}",
+              "type": "number"
+            },
+            {
+              "id": "2cd0c393-36db-45fd-9a98-b065d543a797",
+              "name": "createdAt",
+              "value": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            },
+            {
+              "id": "b134950c-e341-43ed-89be-d945cb7bdc0d",
+              "name": "expiresAt",
+              "value": "={{ $now.plus({ hours: $json.validityHours }).format('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            },
+            {
+              "id": "a4626393-a92d-4cc5-9db3-29dbf498a35f",
+              "name": "status",
+              "value": "ACTIVE",
+              "type": "string"
+            },
+            {
+              "id": "261a4d84-c02f-4a5d-95d5-ca4a61fa0b6f",
+              "name": "couponType",
+              "value": "={{ $json.couponType }}",
+              "type": "string"
+            },
+            {
+              "id": "66f3fd46-9645-4741-82ce-1ecced089d3e",
+              "name": "usageCount",
+              "value": 0,
+              "type": "number"
+            },
+            {
+              "id": "66fa1c37-fe7d-4e0f-b204-7357326fccc2",
+              "name": "maxUsage",
+              "value": 1,
+              "type": "number"
+            },
+            {
+              "id": "671a6b48-e3a7-402a-af9a-63f5bd4b64b3",
+              "name": "notificationEmail",
+              "value": "={{ $json.notificationEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "dcd47b04-4232-4742-afa3-b0ee1b5ef45d",
+              "name": "storeUrl",
+              "value": "={{ $json.storeUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "1392aaf9-bddd-40bc-a2f7-59f22598e5b0",
+              "name": "validityHours",
+              "value": "={{ $json.validityHours }}",
+              "type": "string"
+            },
+            {
+              "id": "846d9037-0547-4f15-817f-43d82d107a58",
+              "name": "reminderHours",
+              "value": "={{ $json.reminderHours }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        -16
+      ],
+      "id": "95ad0dd6-7fb2-406d-ad3d-7687cfbeba63",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1zKUO4cciX_hS_2S9LVW4dfeESBqL0L9OFBGSnnmyCeI",
+          "mode": "list",
+          "cachedResultName": "discount",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zKUO4cciX_hS_2S9LVW4dfeESBqL0L9OFBGSnnmyCeI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1957438278,
+          "mode": "list",
+          "cachedResultName": "Coupons",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zKUO4cciX_hS_2S9LVW4dfeESBqL0L9OFBGSnnmyCeI/edit#gid=1957438278"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "CouponCode": "={{ $json.couponCode }}",
+            "UserEmail": "={{ $json.Email }}",
+            "UserName": "={{ $json.Name }}",
+            "DiscountPercent": "={{ $json.DiscountPercent }}",
+            "Status": "={{ $json.Status }}",
+            "CreatedAt": "={{ $json.createdAt }}",
+            "ExpiresAt": "={{ $json.expiresAt }}",
+            "CouponType": "={{ $json.couponType }}",
+            "UsageCount": "={{ $json.usageCount }}",
+            "MaxUsage": "={{ $json.maxUsage }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "CouponCode",
+              "displayName": "CouponCode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "UserEmail",
+              "displayName": "UserEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "UserName",
+              "displayName": "UserName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DiscountPercent",
+              "displayName": "DiscountPercent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CreatedAt",
+              "displayName": "CreatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ExpiresAt",
+              "displayName": "ExpiresAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CouponType",
+              "displayName": "CouponType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "UsageCount",
+              "displayName": "UsageCount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MaxUsage",
+              "displayName": "MaxUsage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1184,
+        -16
+      ],
+      "id": "6dedce6d-f710-41fb-b433-51ab66e12a88",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "V7959Wei7PYMlBlY",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.UserEmail }}",
+        "subject": "=🎁 Your Exclusive {{ $json.DiscountPercent }}% Off Coupon, {{ $json.UserName }}",
+        "message": "=<!DOCTYPE html>\n<html>\n<body style=\"font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#f5f5f5\">\n  <div style=\"background:#1a1a2e;color:#fff;padding:30px;border-radius:12px;text-align:center\">\n    <h1 style=\"font-size:48px;margin:0\">🎁</h1>\n    <h2 style=\"color:#e94560;margin:10px 0\">Hey !{{ $json.UserName }}</h2>\n    <p style=\"font-size:18px;color:#ccc\">We have an exclusive offer just for you!</p>\n    <div style=\"background:#e94560;border-radius:8px;padding:20px;margin:20px 0\">\n      <p style=\"font-size:14px;color:#fff;margin:0;text-transform:uppercase;letter-spacing:2px\">Your Coupon Code</p>\n      <h2 style=\"font-size:36px;letter-spacing:6px;margin:8px 0;color:#fff;font-family:monospace\"></h2>\n      <p style=\"font-size:28px;font-{{ $json.CouponCode }}weight:bold;color:#fff;margin:0\">{{ $json.DiscountPercent }}% OFF</p>\n    </div>\n    <div style=\"background:rgba(255,255,255,0.1);border-radius:8px;padding:12px;margin:15px 0\">\n      <p style=\"color:#aaa;font-size:13px;margin:0\">⏰ Expires: <strong style=\"color:#fff\">{{ $json.ExpiresAt }}</strong></p>\n      <p style=\"color:#aaa;font-size:12px;margin:5px 0 0\">Single use only — don't share this code!</p>\n    </div>\n    <a href={{ $('Edit Fields2').item.json.storeUrl }}\"?discount={{ $json.CouponCode }}\" style=\"display:inline-block;background:#fff;color:#1a1a2e;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:10px;font-size:16px\">Shop Now →</a>\n  </div>\n  <p style=\"color:#999;font-size:12px;text-align:center;margin-top:20px\">You're receiving this because you opted in to our promotions.<br>This coupon is valid for a single purchase only.</p>\n</body>\n</html>\n\n\nA2 — Expiry Reminder (Gmail — Send Expiry Reminder)\n\n\n<!DOCTYPE html>\n<html>\n<body style=\"font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#f5f5f5\">\n  <div style=\"background:#1a1a2e;color:#fff;padding:30px;border-radius:12px;text-align:center\">\n    <h1 style=\"font-size:48px;margin:0\">⏰</h1>\n    <h2 style=\"color:#f5a623;margin:10px 0\">Your coupon is about to expire!</h2>\n    <p style=\"color:#ccc\">Hey {{ $json.UserName }}, you still haven't used your {{ $json.DiscountPercent }}% off coupon.</p>\n    <div style=\"background:#f5a623;border-radius:8px;padding:20px;margin:20px 0\">\n      <p style=\"font-size:14px;color:#1a1a2e;margin:0;font-weight:bold\">EXPIRING SOON</p>\n      <h2 style=\"font-size:32px;letter-spacing:6px;margin:8px 0;color:#1a1a2e;font-family:monospace\">{{ $json.CouponCode }}</h2>\n      <p style=\"font-size:22px;font-weight:bold;color:#1a1a2e;margin:0\">{{ $json.DiscountPercent }}% OFF — Expires: {{ $json.ExpiresAt }}</p>\n    </div>\n    <a href=\"{{ $('Edit Fields2').item.json.storeUrl }}?discount={{ $('Edit Fields2').item.json.couponCode }}\" style=\"display:inline-block;background:#fff;color:#1a1a2e;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:10px;font-size:16px\">Use It Now →</a>\n  </div>\n</body>\n</html>\n\nA3 — User Expiry Notice (Gmail — Notify User of Expiry)\n\n\n<!DOCTYPE html>\n<html>\n<body style=\"font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#f5f5f5\">\n  <div style=\"background:#1a1a2e;color:#fff;padding:30px;border-radius:12px;text-align:center\">\n    <h1 style=\"font-size:48px;margin:0\">😔</h1>\n    <h2 style=\"color:#aaa;margin:10px 0\">Your coupon has expired</h2>\n    <p style=\"color:#ccc\">Hey {{ $json.UserName }}, your <strong style=\"color:#fff\">{{ $json.DiscountPercent }}% off</strong> coupon <span style=\"font-family:monospace;color:#e94560\">{{ $json.CouponCode }}</span> expired on {{ $json.ExpiresAt }}.</p>\n    <div style=\"background:rgba(255,255,255,0.07);border-radius:8px;padding:16px;margin:20px 0\">\n      <p style=\"color:#aaa;font-size:14px;margin:0\">Stay tuned — more exclusive deals are on their way. 👀</p>\n    </div>\n  </div>\n  <p style=\"color:#999;font-size:12px;text-align:center;margin-top:20px\">You're receiving this because you opted in to our promotions.</p>\n</body>\n</html>\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1408,
+        -16
+      ],
+      "id": "a23c783c-344d-403b-a64f-6b16562a6bbf",
+      "name": "Send a message",
+      "webhookId": "00723762-30a2-4029-b347-ef2d315e91ac",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pcLl7UVcb9KbiPGy",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Generate Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "33d230f5-3c29-4dd7-8396-a75c65a01703",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "41987a9af75237cf6ed427531385784133f6fac7be4447671fe5d6b741dd210c"
+  },
+  "id": "8tFr85wk1kiYBAqf",
+  "tags": []
+}
